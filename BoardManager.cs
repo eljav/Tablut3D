@@ -60,22 +60,134 @@ public class BoardManager : MonoBehaviour
         BoardHighlights.Instance.HighlightAllowedMoves(allowedMoves);
     }
 
+    private void CheckCaptures(int x, int y)
+    {
+        Token objetivo;
+        Token objetivoAdyacente;
+
+        // arriba
+        if (y+1 < 9)
+        {
+            objetivo = Tokens[x,y+1];
+        }
+        else
+        {
+            objetivo = null;
+        }
+        if (objetivo != null && objetivo.isWhite != IsWhiteTurn)
+        {
+            // arriba
+            if (y+2 < 9)
+                {
+                    objetivoAdyacente = Tokens[x,y+2];
+                }
+            else
+            {
+                objetivoAdyacente = null;
+            }
+            if (objetivoAdyacente != null && objetivoAdyacente.isWhite == IsWhiteTurn)
+            {
+                activeToken.Remove(objetivo.gameObject);
+                Destroy(objetivo.gameObject);
+            }
+        }
+        // abajo
+        if (y-1 > 0)
+        {
+            objetivo = Tokens[x,y-1];
+        }
+        else
+        {
+            objetivo = null;
+        }
+        if (objetivo != null && objetivo.isWhite != IsWhiteTurn)
+        {
+            // abajo
+            if (y-2 > 0)
+                {
+                    objetivoAdyacente = Tokens[x,y-2];
+                }
+            else
+            {
+                objetivoAdyacente = null;
+            }
+            if (objetivoAdyacente != null && objetivoAdyacente.isWhite == IsWhiteTurn)
+            {
+                activeToken.Remove(objetivo.gameObject);
+                Destroy(objetivo.gameObject);
+            }
+        }
+        // izquierda
+        if (x-1 > 0)
+        {
+            objetivo = Tokens[x-1,y];
+        }
+        else
+        {
+            objetivo = null;
+        }
+        if (objetivo != null && objetivo.isWhite != IsWhiteTurn)
+        {
+            // izquierda
+            if (x-2 > 0)
+                {
+                    objetivoAdyacente = Tokens[x-2,y];
+                }
+            else
+            {
+                objetivoAdyacente = null;
+            }
+            if (objetivoAdyacente != null && objetivoAdyacente.isWhite == IsWhiteTurn)
+            {
+                activeToken.Remove(objetivo.gameObject);
+                Destroy(objetivo.gameObject);
+            }
+        }
+        // derecha
+        if (x+1 < 9)
+        {
+            objetivo = Tokens[x+1,y];
+        }
+        else
+        {
+            objetivo = null;
+        }
+        if (objetivo != null && objetivo.isWhite != IsWhiteTurn)
+        {
+            // derecha
+            if (x+2 < 9)
+                {
+                    objetivoAdyacente = Tokens[x+2,y];
+                }
+            else
+            {
+                objetivoAdyacente = null;
+            }
+            if (objetivoAdyacente != null && objetivoAdyacente.isWhite == IsWhiteTurn)
+            {
+                activeToken.Remove(objetivo.gameObject);
+                Destroy(objetivo.gameObject);
+            }
+        }   
+    }
+
     private void MoveToken(int x, int y)
     {
         if (allowedMoves[x,y])
         {
-            // destruir pieza
-            Token t = Tokens[x,y];
-            if (t != null && t.isWhite != IsWhiteTurn)
-            {
-                activeToken.Remove(t.gameObject);
-                Destroy(t.gameObject);
-            }
-
+            // destruir pieza ajedrez
+            // Token t = Tokens[x,y]; // pieza objetivo
+            // if (t != null && t.isWhite != IsWhiteTurn)  
+            // {
+            // ajedrez
+            //    activeToken.Remove(t.gameObject);
+            //    Destroy(t.gameObject);
+            // }
             Tokens[selectedToken.CurrentX, selectedToken.CurrentY] = null;
             selectedToken.transform.position = GetTileCenter(x,y);
             selectedToken.SetPosition(x,y);
             Tokens[x,y] = selectedToken;
+            CheckCaptures(x,y);
             IsWhiteTurn = !IsWhiteTurn;
         }
         selectedToken = null;
